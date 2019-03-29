@@ -252,16 +252,16 @@ This layers the data in the commit over the data in the parent.
 		Short:   "Start a new commit.",
 		Long:    "Start a new commit with parent-commit as the parent, or start a commit on the given branch; if the branch does not exist, it will be created.",
 		Example: `# Start a new commit in repo "test" that's not on any branch
-$ pachctl {{alias}} test
+$ {{alias}} test
 
 # Start a commit in repo "test" on branch "master"
-$ pachctl {{alias}} test@master
+$ {{alias}} test@master
 
 # Start a commit with "master" as the parent in repo "test", on a new branch "patch"; essentially a fork.
-$ pachctl {{alias}} test@patch -p master
+$ {{alias}} test@patch -p master
 
 # Start a commit with XXX as the parent in repo "test", not on any branch
-$ pachctl {{alias}} test -p XXX`,
+$ {{alias}} test -p XXX`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) error {
 			branch, err := cmdutil.ParseBranch(args[0])
 			if err != nil {
@@ -373,19 +373,19 @@ $ pachctl {{alias}} test -p XXX`,
 		Long:    "Return all commits on a set of repos.",
 		Example: `
 # return commits in repo "foo"
-$ pachctl {{alias}} foo
+$ {{alias}} foo
 
 # return commits in repo "foo" on branch "master"
-$ pachctl {{alias}} foo master
+$ {{alias}} foo master
 
 # return the last 20 commits in repo "foo" on branch "master"
-$ pachctl {{alias}} foo master -n 20
+$ {{alias}} foo master -n 20
 
 # return commits that are the ancestors of XXX
-$ pachctl {{alias}} foo XXX
+$ {{alias}} foo XXX
 
 # return commits in repo "foo" since commit XXX
-$ pachctl {{alias}} foo master --from XXX`,
+$ {{alias}} foo master --from XXX`,
 		Run:     cmdutil.RunBoundedArgs(1, 2, func(args []string) (retErr error) {
 			c, err := client.NewOnUserMachine(!*noMetrics, !*noPortForwarding, "user")
 			if err != nil {
@@ -458,10 +458,10 @@ $ pachctl {{alias}} foo master --from XXX`,
 		Long:    "Wait for all commits caused by the specified commits to finish and return them.",
 		Example: `
 # return commits caused by foo@XXX and bar@YYY
-$ pachctl {{alias}} foo@XXX bar@YYY
+$ {{alias}} foo@XXX bar@YYY
 
 # return commits caused by foo@XXX leading to repos bar and baz
-$ pachctl {{alias}} foo@XXX -r bar -r baz`,
+$ {{alias}} foo@XXX -r bar -r baz`,
 		Run:     cmdutil.Run(func(args []string) error {
 			commits, err := cmdutil.ParseCommits(args)
 			if err != nil {
@@ -503,13 +503,13 @@ $ pachctl {{alias}} foo@XXX -r bar -r baz`,
 		Long:    "Print commits as they are created in the specified repo and branch.  By default, all existing commits on the specified branch are returned first.  A commit is only considered 'created' when it's been finished.",
 		Example: `
 # subscribe to commits in repo "test" on branch "master"
-$ pachctl {{alias}} test@master
+$ {{alias}} test@master
 
 # subscribe to commits in repo "test" on branch "master", but only since commit XXX.
-$ pachctl {{alias}} test@master --from XXX
+$ {{alias}} test@master --from XXX
 
 # subscribe to commits in repo "test" on branch "master", but only for new commits created from now on.
-$ pachctl {{alias}} test@master --new`,
+$ {{alias}} test@master --new`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) error {
 			branch, err := cmdutil.ParseBranch(args[0])
 			if err != nil {
@@ -691,43 +691,43 @@ Files can be read from finished commits with get-file.
 		Long:    "Put-file supports a number of ways to insert data into pfs:",
 		Example: `
 # Put data from stdin as repo/branch/path:
-$ echo "data" | pachctl {{alias}} repo branch path
+$ echo "data" | {{alias}} repo branch path
 
 # Put data from stdin as repo/branch/path and start / finish a new commit on the branch.
-$ echo "data" | pachctl {{alias}} -c repo branch path
+$ echo "data" | {{alias}} -c repo branch path
 
 # Put a file from the local filesystem as repo/branch/path:
-$ pachctl {{alias}} repo branch path -f file
+$ {{alias}} repo branch path -f file
 
 # Put a file from the local filesystem as repo/branch/file:
-$ pachctl {{alias}} repo branch -f file
+$ {{alias}} repo branch -f file
 
 # Put the contents of a directory as repo/branch/path/dir/file:
-$ pachctl {{alias}} -r repo branch path -f dir
+$ {{alias}} -r repo branch path -f dir
 
 # Put the contents of a directory as repo/branch/dir/file:
-$ pachctl {{alias}} -r repo branch -f dir
+$ {{alias}} -r repo branch -f dir
 
 # Put the contents of a directory as repo/branch/file, i.e. put files at the top level:
-$ pachctl {{alias}} -r repo branch / -f dir
+$ {{alias}} -r repo branch / -f dir
 
 # Put the data from a URL as repo/branch/path:
-$ pachctl {{alias}} repo branch path -f http://host/path
+$ {{alias}} repo branch path -f http://host/path
 
 # Put the data from a URL as repo/branch/path:
-$ pachctl {{alias}} repo branch -f http://host/path
+$ {{alias}} repo branch -f http://host/path
 
 # Put the data from an S3 bucket as repo/branch/s3_object:
-$ pachctl {{alias}} repo branch -r -f s3://my_bucket
+$ {{alias}} repo branch -r -f s3://my_bucket
 
 # Put several files or URLs that are listed in file.
 # Files and URLs should be newline delimited.
-$ pachctl {{alias}} repo branch -i file
+$ {{alias}} repo branch -i file
 
 # Put several files or URLs that are listed at URL.
 # NOTE this URL can reference local files, so it could cause you to put sensitive
 # files into your Pachyderm cluster.
-$ pachctl {{alias}} repo branch -i http://host/path`,
+$ {{alias}} repo branch -i http://host/path`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) (retErr error) {
 			file, err := cmdutil.ParseFile(args[0])
 			if err != nil {
@@ -876,15 +876,15 @@ $ pachctl {{alias}} repo branch -i http://host/path`,
 		Long:    "Return the contents of a file.",
 		Example: `
 # get file "XXX" on branch "master" in repo "foo"
-$ pachctl {{alias}} foo@master:XXX
+$ {{alias}} foo@master:XXX
 
 # get file "XXX" in the parent of the current head of branch "master"
 # in repo "foo"
-$ pachctl {{alias}} foo@master^:XXX
+$ {{alias}} foo@master^:XXX
 
 # get file "XXX" in the grandparent of the current head of branch "master"
 # in repo "foo"
-$ pachctl {{alias}} foo@master^2:XXX`,
+$ {{alias}} foo@master^2:XXX`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) error {
 			file, err := cmdutil.ParseFile(args[0])
 			if err != nil {
@@ -965,24 +965,24 @@ $ pachctl {{alias}} foo@master^2:XXX`,
 		Long:    "Return the files in a directory.",
 		Example: `
 # list top-level files on branch "master" in repo "foo"
-$ pachctl {{alias}} foo@master
+$ {{alias}} foo@master
 
 # list files under directory "dir" on branch "master" in repo "foo"
-$ pachctl {{alias}} foo@master:dir
+$ {{alias}} foo@master:dir
 
 # list top-level files in the parent commit of the current head of "master"
 # in repo "foo"
-$ pachctl {{alias}} foo@master^
+$ {{alias}} foo@master^
 
 # list top-level files in the grandparent of the current head of "master"
 # in repo "foo"
-$ pachctl {{alias}} foo@master^2
+$ {{alias}} foo@master^2
 
 # list the last n versions of top-level files on branch "master" in repo "foo"
-$ pachctl {{alias}} foo@master --history n
+$ {{alias}} foo@master --history n
 
 # list all versions of top-level files on branch "master" in repo "foo"
-$ pachctl {{alias}} foo@master --history -1`,
+$ {{alias}} foo@master --history -1`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) error {
 			file, err := cmdutil.ParseFile(args[0])
 			if err != nil {
@@ -1024,10 +1024,10 @@ $ pachctl {{alias}} foo@master --history -1`,
 # Return files in repo "foo" on branch "master" that start
 # with the character "A".  Note how the double quotation marks around the 
 # parameter are necessary because otherwise your shell might interpret the "*".
-$ pachctl {{alias}} "foo@master:A*"
+$ {{alias}} "foo@master:A*"
 
 # Return files in repo "foo" on branch "master" under directory "data".
-$ pachctl {{alias}} "foo@master:data/*"`,
+$ {{alias}} "foo@master:data/*"`,
 		Run:     cmdutil.RunFixedArgs(1, func(args []string) error {
 			file, err := cmdutil.ParseFile(args[0])
 			if err != nil {
@@ -1072,11 +1072,11 @@ $ pachctl {{alias}} "foo@master:data/*"`,
 		Example: `
 # Return the diff of the file "path" of the repo "foo" between the head of the
 # "master" branch and its parent.
-$ pachctl {{alias}} foo@master:path
+$ {{alias}} foo@master:path
 
 # Return the diff between the master branches of repos foo and bar at paths
 # path1 and path2, respectively.
-$ pachctl {{alias}} foo@master:path1 bar@master:path2`,
+$ {{alias}} foo@master:path1 bar@master:path2`,
 		Run:     cmdutil.RunBoundedArgs(1, 2, func(args []string) error {
 			newFile, err := cmdutil.ParseFile(args[0])
 			if err != nil {

@@ -112,16 +112,16 @@ To increase the throughput of a job, increase the 'shard' parameter.
 		Long: "Return info about jobs.",
 		Example: `
 # Return all jobs
-$ pachctl {{alias}}
+$ {{alias}}
 
 # Return all jobs in pipeline foo
-$ pachctl {{alias}} -p foo
+$ {{alias}} -p foo
 
 # Return all jobs whose input commits include foo@XXX and bar@YYY
-$ pachctl {{alias}} -i foo@XXX -i bar@YYY
+$ {{alias}} -i foo@XXX -i bar@YYY
 
 # Return all jobs in pipeline foo and whose input commits include bar@YYY
-$ pachctl {{alias}} -p foo -i bar@YYY`,
+$ {{alias}} -p foo -i bar@YYY`,
 		Run: cmdutil.RunFixedArgs(0, func(args []string) error {
 			commits, err := cmdutil.ParseCommits(inputCommitStrs)
 			if err != nil {
@@ -180,10 +180,10 @@ $ pachctl {{alias}} -p foo -i bar@YYY`,
 		Long:    "Wait for all jobs caused by the specified commits to finish and return them.",
 		Example: `
 # Return jobs caused by foo@XXX and bar@YYY.
-$ pachctl {{alias}} foo@XXX bar@YYY
+$ {{alias}} foo@XXX bar@YYY
 
 # Return jobs caused by foo@XXX leading to pipelines bar and baz.
-$ pachctl {{alias}} foo@XXX -p bar -p baz`,
+$ {{alias}} foo@XXX -p bar -p baz`,
 		Run:     cmdutil.Run(func(args []string) error {
 			commits, err := cmdutil.ParseCommits(args)
 			if err != nil {
@@ -385,13 +385,13 @@ $ pachctl {{alias}} foo@XXX -p bar -p baz`,
 		Long:    "Return logs from a job.",
 		Example: `
 # Return logs emitted by recent jobs in the "filter" pipeline
-$ pachctl {{alias}} --pipeline=filter
+$ {{alias}} --pipeline=filter
 
 # Return logs emitted by the job aedfa12aedf
-$ pachctl {{alias}} --job=aedfa12aedf
+$ {{alias}} --job=aedfa12aedf
 
 # Return logs emitted by the pipeline \"filter\" while processing /apple.txt and a file with the hash 123aef
-$ pachctl {{alias}} --pipeline=filter --inputs=/apple.txt,123aef`,
+$ {{alias}} --pipeline=filter --inputs=/apple.txt,123aef`,
 		Run:     cmdutil.RunFixedArgs(0, func(args []string) error {
 			client, err := pachdclient.NewOnUserMachine(!*noMetrics, !*noPortForwarding, "user")
 			if err != nil {

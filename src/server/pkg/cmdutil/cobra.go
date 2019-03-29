@@ -208,7 +208,7 @@ func CreateAliases(cmd *cobra.Command, invocations []string) []*cobra.Command {
 				} else {
 					cur.Use = strings.Replace(cmd.Use, "{{alias}}", arg, -1)
 				}
-				cur.Example = strings.Replace(cmd.Example, "{{alias}}", invocation, -1)
+				cur.Example = strings.Replace(cmd.Example, "{{alias}}", fmt.Sprintf("%s %s", os.Args[0], invocation), -1)
 			} else {
 				cur.Use = arg
 			}
