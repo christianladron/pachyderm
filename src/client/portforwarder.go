@@ -54,16 +54,16 @@ func NewPortForwarder(namespace string) (*PortForwarder, error) {
 		return nil, err
 	}
 	if namespace == "" {
-    var overridden bool
-    namespace, overridden, err = kubeConfig.Namespace()
-    if err != nil {
-      return nil, err
-    }
-    if overridden {
-      log.Debugf("namespace overridden to: %v", namespace)
-    } else {
-      log.Debugf("namespace: %v", namespace)
-    }
+		var overridden bool
+		namespace, overridden, err = kubeConfig.Namespace()
+		if err != nil {
+			return nil, err
+		}
+		if overridden {
+			log.Debugf("namespace overridden to: %v", namespace)
+		} else {
+			log.Debugf("namespace: %v", namespace)
+		}
 	}
 
 	client, err := kubernetes.NewForConfig(config)
