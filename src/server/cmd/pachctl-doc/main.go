@@ -30,7 +30,7 @@ func recursiveBlockQuoteExamples(parent *cobra.Command) {
 
 func do(appEnvObj interface{}) error {
 	// Set 'os.Args[0]' so that examples use the expected command name
-	os.Args[0] = "foobar" // TODO
+	os.Args[0] = "pachctl"
 
 	rootCmd := cmd.PachctlCmd()
 
