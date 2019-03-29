@@ -46,16 +46,24 @@ type PortForwarder struct {
 
 // NewPortForwarder creates a new port forwarder
 func NewPortForwarder(namespace string) (*PortForwarder, error) {
-	if namespace == "" {
-		namespace = "default"
-	}
-
 	rules := clientcmd.NewDefaultClientConfigLoadingRules()
 	overrides := &clientcmd.ConfigOverrides{}
 	kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(rules, overrides)
 	config, err := kubeConfig.ClientConfig()
 	if err != nil {
 		return nil, err
+	}
+	if namespace == "" {
+    var overridden bool
+    namespace, overridden, err = kubeConfig.Namespace()
+    if err != nil {
+      return nil, err
+    }
+    if overridden {
+      log.Debugf("namespace overridden to: %v", namespace)
+    } else {
+      log.Debugf("namespace: %v", namespace)
+    }
 	}
 
 	client, err := kubernetes.NewForConfig(config)
