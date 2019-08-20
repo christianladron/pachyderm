@@ -904,7 +904,7 @@ func (a *APIServer) uploadOutput(pachClient *client.APIClient, dir string, tag s
 	}); err != nil {
 		return fmt.Errorf("error walking output: %v", err)
 	}
-	if err := putObjsClient.CloseSend(); err != nil {
+	if _, err := putObjsClient.CloseAndRecv(); err != nil && err != io.EOF {
 		return err
 	}
 	// Serialize datum hashtree
@@ -1503,6 +1503,9 @@ func (a *APIServer) getParentHashTree(ctx context.Context, pachClient *client.AP
 	if err != nil {
 		return nil, err
 	}
+	if parentCommitInfo == nil {
+		return ioutil.NopCloser(&bytes.Buffer{}), nil
+	}
 	info, err := pachClient.InspectObject(parentCommitInfo.Trees[merge].Hash)
 	if err != nil {
 		return nil, err
@@ -2039,7 +2042,10 @@ func (a *APIServer) cacheHashtree(pachClient *client.APIClient, tag string, datu
 	if a.pipelineInfo.EnableStats {
 		buf.Reset()
 		if err := pachClient.GetTag(tag+statsTagSuffix, buf); err != nil {
-			return err
+			// We are okay with not finding the stats hashtree.
+			// This allows users to enable stats on a pipeline
+			// with pre-existing jobs.
+			return nil
 		}
 		return a.datumStatsCache.Put(datumIdx, buf)
 	}
